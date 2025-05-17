@@ -1,25 +1,30 @@
 {% extends "base.html" %}
 {% load compress humanize static hc_extras %}
 
-{% block title %}Telegram Integration for {% site_name %}{% endblock %}
+{% block title %}Telegram Integration for {{ site_name }}{% endblock %}
 
+{% block description %}
+    <meta name="description" content="Use {{ site_name }} with Telegram: configure {{ site_name }} to post status updates to a Telegram user, group or channel.">
+{% endblock %}
 
 {% block content %}
 <div class="row">
 <div class="col-sm-12">
     <h1>Telegram</h1>
 
-    {% if chat_id %}
+    {% if recipient.id %}
     <div class="jumbotron">
         <p>
             When a check goes <strong>up</strong> or <strong>down</strong>,
-            {% site_name %} will send notifications to
-            {% if chat_type == "private" %}
+            {{ site_name }} will send notifications to
+            {% if recipient.type == "private" %}
                 a Telegram user
+            {% elif recipient.type == "channel" %}
+                a Telegram channel
             {% else %}
-                a Telegram chat
+                a Telegram group
             {% endif %}
-            named <strong>{{ chat_name }}</strong>.
+            named <strong>{{ recipient.name }}</strong>.
         </p>
     </div>
 
@@ -28,8 +33,8 @@
         {% csrf_token %}
         <div class="form-group">
             <label class="col-sm-3 control-label">Project</label>
-            <div class="col-sm-8">
-                <select name="project" class="selectpicker">
+            <div class="col-sm-6 col-lg-4">
+                <select name="project" class="form-control">
                     {% for project in projects %}
                     <option value="{{ project.code }}">{{ project }}</option>
                     {% endfor %}
@@ -49,23 +54,29 @@
 
     {% else %}
     <p>If your team uses <a href="https://telegram.org/">Telegram</a>,
-    you can set up {% site_name %} to post status updates directly to an
-    appropriate Telegram chat or user.</p>
+    you can set up {{ site_name }} to post status updates directly to an
+    appropriate Telegram user, group or channel.</p>
 
     <h2>Setup Guide</h2>
     <div class="row ai-step">
         <div class="col-sm-6">
             <span class="step-no"></span>
             <p>
-                From your Telegram client, invite
-                <strong><a href="https://t.me/{{ bot_name }}">{{ bot_name }}</a></strong>
-                to a group. It will get added as a member with no access to group
-                messages.
+                <strong>Groups:</strong> If you want notifications sent to a group, start by inviting
+                <a href="https://t.me/{{ bot_name }}">{{ bot_name }}</a>
+                to the group. The bot will get added as a member with no access to
+                group messages.
             </p>
             <p>
-                Alternatively, if you want notifications sent to yourself
-                directly, start a conversation with
-                <strong>{{ bot_name }}</strong>.
+                <strong>Direct messages:</strong> If you want notifications sent to yourself directly,
+                start a conversation with
+                <a href="https://t.me/{{ bot_name }}">{{ bot_name }}</a>.
+            </p>
+            <p>
+                <strong>Channels:</strong> If you want notifications sent to a Telegram channel,
+                add <a href="https://t.me/{{ bot_name }}">{{ bot_name }}</a>
+                to the channel's Administrators. Enable the "Post Messages" admin
+                right, and disable all other admin rights.
             </p>
         </div>
         <div class="col-sm-6">
@@ -82,6 +93,10 @@
                If there are multiple bots in the group, type
                <strong><code>/start@{{ bot_name }}</code></strong> instead.
            </p>
+           <p>If you want {{ site_name }} to post notifications to a <strong>specific
+              group topic</strong>, send a <strong><code>/start@{{ bot_name }}</code></strong>
+              command from that topic.
+           </p>
             <p>The bot will respond with a confirmation link.</p>
         </div>
         <div class="col-sm-6">
@@ -95,7 +110,7 @@
         <div class="col-sm-6">
             <span class="step-no"></span>
             <p>Click or tap on the confirmation link, and
-            {% site_name %} will open in a browser window asking you to
+            {{ site_name }} will open in a browser window asking you to
              confirm the new integration.</p>
             <p>Select the project you want the Telegram integration added to,
             click on "Connect Telegram", and it's done!</p>
@@ -111,12 +126,4 @@
     {% endif %}
 </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-{% compress js %}
-<script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/bootstrap-select.min.js' %}"></script>
-{% endcompress %}
 {% endblock %}

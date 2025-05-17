@@ -1,10 +1,15 @@
+from __future__ import annotations
+
+from django.test.utils import override_settings
+from django.utils.timezone import now
+
 from hc.api.models import Check
 from hc.test import BaseTestCase
 
 
 class MetricsTestCase(BaseTestCase):
-    def setUp(self):
-        super(MetricsTestCase, self).setUp()
+    def setUp(self) -> None:
+        super().setUp()
         self.project.api_key_readonly = "R" * 32
         self.project.save()
 
@@ -13,17 +18,31 @@ class MetricsTestCase(BaseTestCase):
         self.check.save()
 
         key = "R" * 32
-        self.url = "/projects/%s/checks/metrics/%s" % (self.project.code, key)
+        self.url = f"/projects/{self.project.code}/metrics/{key}"
+        self.auth_url = f"/projects/{self.project.code}/metrics/"
 
-    def test_it_works(self):
+    def test_it_works(self) -> None:
         r = self.client.get(self.url)
         self.assertEqual(r.status_code, 200)
-        self.assertContains(r, 'name="Alice Was Here"')
-        self.assertContains(r, 'tags="foo"')
-        self.assertContains(r, 'tag="foo"')
+
+        alice_spec = '{name="Alice Was Here", tags="foo", unique_key="%s"}'
+        alice_spec = alice_spec % self.check.unique_key
+
+        self.assertContains(r, f"hc_check_up{alice_spec} 1")
+        self.assertContains(r, f"hc_check_started{alice_spec} 0")
+        self.assertContains(r, 'hc_tag_up{tag="foo"} 1')
         self.assertContains(r, "hc_checks_total 1")
 
-    def test_it_escapes_newline(self):
+    def test_authenticated_request_requires_bearer_token(self) -> None:
+        r = self.client.get(self.auth_url)
+        self.assertEqual(r.status_code, 401)
+
+    def test_authenticated_request_accepts_bearer_token(self) -> None:
+        headers = {"Authorization": "Bearer " + "R" * 32}
+        r = self.client.get(self.auth_url, headers=headers)
+        self.assertEqual(r.status_code, 200)
+
+    def test_it_escapes_newline(self) -> None:
         self.check.name = "Line 1\nLine2"
         self.check.tags = "A\\C"
         self.check.save()
@@ -33,11 +52,30 @@ class MetricsTestCase(BaseTestCase):
         self.assertContains(r, "Line 1\\nLine2")
         self.assertContains(r, "A\\\\C")
 
-    def test_it_checks_api_key_length(self):
+    def test_it_checks_api_key_length(self) -> None:
         r = self.client.get(self.url + "R")
         self.assertEqual(r.status_code, 400)
 
-    def test_it_checks_api_key(self):
-        url = "/projects/%s/checks/metrics/%s" % (self.project.code, "X" * 32)
+    def test_it_checks_api_key(self) -> None:
+        rw_key = "X" * 32
+        url = f"/projects/{self.project.code}/checks/metrics/{rw_key}"
         r = self.client.get(url)
         self.assertEqual(r.status_code, 403)
+
+    @override_settings(PROMETHEUS_ENABLED=False)
+    def test_it_requires_prometheus_enabled(self) -> None:
+        r = self.client.get(self.url)
+        self.assertEqual(r.status_code, 404)
+
+    def test_it_reports_hc_check_started(self) -> None:
+        self.check.last_start = now()
+        self.check.save()
+
+        r = self.client.get(self.url)
+        self.assertEqual(r.status_code, 200)
+
+        alice_spec = '{name="Alice Was Here", tags="foo", unique_key="%s"}'
+        alice_spec = alice_spec % self.check.unique_key
+
+        self.assertContains(r, f"hc_check_up{alice_spec} 1")
+        self.assertContains(r, f"hc_check_started{alice_spec} 1")

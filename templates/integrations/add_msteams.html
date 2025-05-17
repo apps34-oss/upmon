@@ -1,8 +1,7 @@
-{% extends "base.html" %}
+{% extends "base_project.html" %}
 {% load humanize static hc_extras %}
 
-{% block title %}Microsoft Teams Integration for {% site_name %}{% endblock %}
-
+{% block title %}Microsoft Teams Integration for {{ site_name }}{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -10,7 +9,7 @@
         <h1>Microsoft Teams</h1>
 
         <p>If your team uses <a href="https://products.office.com/en-us/microsoft-teams/group-chat-software">Microsoft Teams</a>,
-        you can set up {% site_name %} to post status updates directly to an appropriate
+        you can set up {{ site_name }} to post status updates directly to your chosen
         Microsoft Teams channel.</p>
 
         <h2>Setup Guide</h2>
@@ -19,20 +18,16 @@
             <div class="col-sm-6">
                 <span class="step-no"></span>
                 <p>
-                    Log into your Microsoft Teams account, click the <strong>Apps</strong> tab.
-                </p>
-                <p>
-                    Search for the <strong>Incoming Webhook</strong> connector, and add it.
+                    Log into your Microsoft Teams account. In the channel list,
+                    click on the three dot menu next to a channel,
+                    and select <strong>Workflows</strong>.
                 </p>
             </div>
             <div class="col-sm-6">
-                <div class="marker-wrap">
-                    <span style="left: 6%; top: 83%;" class="marker"></span>
-                    <img
-                        class="ai-guide-screenshot"
-                        alt="Add the Incoming Webhook connector"
-                        src="{% static 'img/integrations/setup_msteams_1.png' %}" />
-                </div>
+                <img
+                    class="ai-guide-screenshot"
+                    alt="Add the Incoming Webhook connector"
+                    src="{% static 'img/integrations/setup_msteamsw_1.png' %}" />
             </div>
         </div>
 
@@ -40,37 +35,28 @@
             <div class="col-sm-6">
                 <span class="step-no"></span>
                 <p>
-                  Select the channel where you want {% site_name %} to post
-                  notifications.
+                    Search workflow templates for "webhook". Select the template named
+                    <strong>"Post to a channel when a webhook request is received"</strong>.
                 </p>
+            </div>
+            <div class="col-sm-6">
+                <img
+                    class="ai-guide-screenshot"
+                    alt="Add the Incoming Webhook connector"
+                    src="{% static 'img/integrations/setup_msteamsw_2.png' %}" />
+            </div>
+        </div>
+
+        <div class="row ai-step">
+            <div class="col-sm-6">
+                <span class="step-no"></span>
+                <p>Give the new workflow a descriptive name.</p>
             </div>
             <div class="col-sm-6">
                 <img
                     class="ai-guide-screenshot"
                     alt="Select the channel"
-                    src="{% static 'img/integrations/setup_msteams_2.png' %}">
-            </div>
-        </div>
-
-        <div class="row ai-step">
-            <div class="col-sm-6">
-                <span class="step-no"></span>
-                <p>
-                    Give the connector a descriptive name.
-                </p>
-                <p>
-                    Optionally, upload an icon
-                    (feel free to use <a href="{% static 'img/logo@2x.png' %}">this one</a>).
-                </p>
-                <p>
-                    Click on <strong>Create</strong>.
-                </p>
-            </div>
-            <div class="col-sm-6">
-                <img
-                    class="ai-guide-screenshot"
-                    alt="Create the connector"
-                    src="{% static 'img/integrations/setup_msteams_3.png' %}">
+                    src="{% static 'img/integrations/setup_msteamsw_3.png' %}">
             </div>
         </div>
 
@@ -83,13 +69,10 @@
                 </p>
             </div>
             <div class="col-sm-6">
-                <div class="marker-wrap">
-                    <span style="left: 42%; top: 72%;" class="marker"></span>
-                    <img
-                        class="ai-guide-screenshot"
-                        alt="Copy the Webhook URL"
-                        src="{% static 'img/integrations/setup_msteams_4.png' %}">
-                </div>
+                <img
+                    class="ai-guide-screenshot"
+                    alt="Copy the Webhook URL"
+                    src="{% static 'img/integrations/setup_msteamsw_4.png' %}">
             </div>
         </div>
 

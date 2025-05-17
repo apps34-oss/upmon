@@ -1,7 +1,11 @@
-{% extends "base.html" %}
+{% extends "base_project.html" %}
 {% load humanize static hc_extras %}
 
-{% block title %}Slack Integration for {% site_name %}{% endblock %}
+{% block title %}{% site_name %} Integration for Slack{% endblock %}
+
+{% block description %}
+    <meta name="description" content="Use {% site_name %} with Slack: configure {% site_name %} to post status updates directly to a Slack channel.">
+{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -29,12 +33,12 @@
         {% site_name %} is a <strong>free</strong> and
         <a href="https://github.com/healthchecks/healthchecks">open source</a>
         service for monitoring your cron jobs, background processes and
-        scheduled tasks. Before adding Slack integration, please log into
-        {% site_name %}:</p>
+        scheduled tasks. To set up a {% site_name %} integration for Slack, please
+        log into {% site_name %}:</p>
 
         <div class="text-center">
             <a href="{% url 'hc-login' %}"
-               class="btn btn-primary btn-lg">Sign In</a>
+               class="btn btn-primary btn-lg">Log In</a>
         </div>
         {% endif %}
     </div>
@@ -54,7 +58,7 @@
 
                 to the <strong>Integrations</strong> page,
                 and click on <strong>Add Integration</strong> next to the
-                Slack integration.
+                Slack icon.
             </p>
         </div>
         <div class="col-sm-6">

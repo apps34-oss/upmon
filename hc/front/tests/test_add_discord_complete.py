@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 import json
-from unittest.mock import patch
+from typing import Any
+from unittest.mock import Mock, patch
 
 from django.test.utils import override_settings
+
 from hc.api.models import Channel
 from hc.test import BaseTestCase
 
@@ -10,8 +14,8 @@ from hc.test import BaseTestCase
 class AddDiscordCompleteTestCase(BaseTestCase):
     url = "/integrations/add_discord/"
 
-    @patch("hc.front.views.requests.post")
-    def test_it_handles_oauth_response(self, mock_post):
+    @patch("hc.front.views.curl.post", autospec=True)
+    def test_it_handles_oauth_response(self, mock_post: Mock) -> None:
         session = self.client.session
         session["add_discord"] = ("foo", str(self.project.code))
         session.save()
@@ -38,7 +42,43 @@ class AddDiscordCompleteTestCase(BaseTestCase):
         # Session should now be clean
         self.assertFalse("add_discord" in self.client.session)
 
-    def test_it_avoids_csrf(self):
+    @patch("hc.front.views.curl.post", autospec=True)
+    def test_it_handles_code_30007(self, mock_post: Mock) -> None:
+        oauth_response = {"code": 30007}
+        mock_post.return_value.text = json.dumps(oauth_response)
+        mock_post.return_value.json.return_value = oauth_response
+
+        session = self.client.session
+        session["add_discord"] = ("foo", str(self.project.code))
+        session.save()
+
+        self.client.login(username="alice@example.org", password="password")
+        r = self.client.get(self.url + "?code=12345678&state=foo", follow=True)
+        self.assertRedirects(r, self.channels_url)
+        self.assertContains(r, "maximum number of webhooks")
+
+    @patch("hc.front.views.curl.post", autospec=True)
+    def test_it_handles_unexpected_oauth_response(self, mock_post: Mock) -> None:
+        oauth_response: Any
+        for oauth_response in ("surprise", {}, None):
+            mock_post.return_value.text = json.dumps(oauth_response)
+            mock_post.return_value.json.return_value = oauth_response
+
+            session = self.client.session
+            session["add_discord"] = ("foo", str(self.project.code))
+            session.save()
+
+            url = self.url + "?code=12345678&state=foo"
+
+            self.client.login(username="alice@example.org", password="password")
+
+            with patch("hc.front.views.logger") as logger:
+                r = self.client.get(url, follow=True)
+                self.assertRedirects(r, self.channels_url)
+                self.assertContains(r, "Received an unexpected response from Discord.")
+                self.assertTrue(logger.warning.called)
+
+    def test_it_avoids_csrf(self) -> None:
         session = self.client.session
         session["add_discord"] = ("foo", str(self.project.code))
         session.save()
@@ -52,7 +92,7 @@ class AddDiscordCompleteTestCase(BaseTestCase):
         # Session should now be clean
         self.assertFalse("add_discord" in self.client.session)
 
-    def test_it_handles_access_denied(self):
+    def test_it_handles_access_denied(self) -> None:
         session = self.client.session
         session["add_discord"] = ("foo", str(self.project.code))
         session.save()
@@ -70,7 +110,19 @@ class AddDiscordCompleteTestCase(BaseTestCase):
         self.assertFalse("add_discord" in self.client.session)
 
     @override_settings(DISCORD_CLIENT_ID=None)
-    def test_it_requires_client_id(self):
+    def test_it_requires_client_id(self) -> None:
         self.client.login(username="alice@example.org", password="password")
         r = self.client.get(self.url + "?code=12345678&state=bar")
         self.assertEqual(r.status_code, 404)
+
+    def test_it_requires_rw_access(self) -> None:
+        session = self.client.session
+        session["add_discord"] = ("foo", str(self.project.code))
+        session.save()
+
+        self.bobs_membership.role = "r"
+        self.bobs_membership.save()
+
+        self.client.login(username="bob@example.org", password="password")
+        r = self.client.get(self.url + "?code=12345678&state=foo")
+        self.assertEqual(r.status_code, 403)

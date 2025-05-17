@@ -5,10 +5,12 @@
 **Period:** {{ check.timeout|hc_duration }}
 {% endif %}
 
-{% if check.kind == "cron" %}
-**Schedule:** {{ check.schedule|escapejs }}
+{% if check.kind == "cron" or check.kind == "oncalendar" %}
+**Schedule:** `{{ check.schedule|fix_asterisks }}`
+
+**Time Zone:** {{ check.tz }}
 {% endif %}
 
-**Last Ping:** {{ check.last_ping|naturaltime }}
+**Last Ping:** {% if ping %}{{ ping.created|naturaltime }}{% else %}never{% endif %}
 
-[Full Details @ {% site_name %}]({{ check.details_url }})
+[Full Details @ {% site_name %}]({{ check.cloaked_url }})

@@ -1,29 +1,38 @@
-import getpass
+from __future__ import annotations
 
+from getpass import getpass
+from typing import Any
+
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
-from hc.accounts.forms import AvailableEmailForm
+
+from hc.accounts.forms import LowercaseEmailField
 from hc.accounts.views import _make_user
 
 
 class Command(BaseCommand):
     help = """Create a super-user account."""
 
-    def handle(self, *args, **options):
+    def handle(self, **options: Any) -> str:
         email = None
         password = None
 
         while not email:
             raw = input("Email address:")
-            form = AvailableEmailForm({"identity": raw})
-            if not form.is_valid():
-                self.stderr.write("Error: " + " ".join(form.errors["identity"]))
+            try:
+                email = LowercaseEmailField().clean(raw)
+            except ValidationError as e:
+                self.stderr.write("Error: " + " ".join(e.messages))
+                continue
+            if User.objects.filter(email=email).exists():
+                self.stderr.write(f"Error: email {email} is already taken")
+                email = None
                 continue
 
-            email = form.cleaned_data["identity"]
-
         while not password:
-            p1 = getpass.getpass()
-            p2 = getpass.getpass("Password (again):")
+            p1 = getpass()
+            p2 = getpass("Password (again):")
             if p1.strip() == "":
                 self.stderr.write("Error: Blank passwords aren't allowed.")
                 continue

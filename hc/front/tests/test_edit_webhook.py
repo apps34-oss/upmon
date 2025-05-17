@@ -1,12 +1,16 @@
+from __future__ import annotations
+
 import json
 
-from hc.api.models import Channel
+from hc.api.models import Channel, Check
 from hc.test import BaseTestCase
 
 
 class EditWebhookTestCase(BaseTestCase):
-    def setUp(self):
-        super(EditWebhookTestCase, self).setUp()
+    def setUp(self) -> None:
+        super().setUp()
+
+        self.check = Check.objects.create(project=self.project)
 
         definition = {
             "method_down": "GET",
@@ -24,9 +28,9 @@ class EditWebhookTestCase(BaseTestCase):
         self.channel.value = json.dumps(definition)
         self.channel.save()
 
-        self.url = "/integrations/%s/edit_webhook/" % self.channel.code
+        self.url = f"/integrations/{self.channel.code}/edit/"
 
-    def test_it_shows_form(self):
+    def test_it_shows_form(self) -> None:
         self.client.login(username="alice@example.org", password="password")
         r = self.client.get(self.url)
         self.assertContains(r, "Webhook Settings")
@@ -42,7 +46,7 @@ class EditWebhookTestCase(BaseTestCase):
         self.assertContains(r, "http://example.org/up")
         self.assertContains(r, "$NAME is up")
 
-    def test_it_saves_form_and_redirects(self):
+    def test_it_saves_form_and_redirects(self) -> None:
         form = {
             "name": "Call foo.com / bar.com",
             "method_down": "POST",
@@ -63,22 +67,32 @@ class EditWebhookTestCase(BaseTestCase):
         self.assertEqual(self.channel.name, "Call foo.com / bar.com")
 
         down_spec = self.channel.down_webhook_spec
-        self.assertEqual(down_spec["method"], "POST")
-        self.assertEqual(down_spec["url"], "http://foo.com")
-        self.assertEqual(down_spec["body"], "going down")
-        self.assertEqual(down_spec["headers"], {"X-Foo": "1", "X-Bar": "2"})
+        self.assertEqual(down_spec.method, "POST")
+        self.assertEqual(down_spec.url, "http://foo.com")
+        self.assertEqual(down_spec.body, "going down")
+        self.assertEqual(down_spec.headers, {"X-Foo": "1", "X-Bar": "2"})
 
         up_spec = self.channel.up_webhook_spec
-        self.assertEqual(up_spec["method"], "POST")
-        self.assertEqual(up_spec["url"], "https://bar.com")
-        self.assertEqual(up_spec["body"], "going up")
-        self.assertEqual(up_spec["headers"], {"Content-Type": "text/plain"})
+        self.assertEqual(up_spec.method, "POST")
+        self.assertEqual(up_spec.url, "https://bar.com")
+        self.assertEqual(up_spec.body, "going up")
+        self.assertEqual(up_spec.headers, {"Content-Type": "text/plain"})
 
-    def test_it_requires_kind_webhook(self):
-        self.channel.kind = "email"
-        self.channel.value = "foo@example.org"
+        # Make sure it does not call assign_all_checks
+        self.assertFalse(self.channel.checks.exists())
+
+    def test_it_requires_kind_webhook(self) -> None:
+        self.channel.kind = "shell"
         self.channel.save()
 
         self.client.login(username="alice@example.org", password="password")
         r = self.client.get(self.url)
         self.assertEqual(r.status_code, 400)
+
+    def test_it_requires_rw_access(self) -> None:
+        self.bobs_membership.role = "r"
+        self.bobs_membership.save()
+
+        self.client.login(username="bob@example.org", password="password")
+        r = self.client.post(self.url, {})
+        self.assertEqual(r.status_code, 403)

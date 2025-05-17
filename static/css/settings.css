@@ -11,42 +11,39 @@
     padding-bottom: 24px;
 }
 
-.page-profile .icon-ok {
+.page-project .ic-ok {
     color: #5cb85c;
 }
 
-#close-account, #remove-project {
-    margin-left: 24px;
-    border-color: #d43f3a;
-    color: #d43f3a;
+.invite-suggestion {
+    color: var(--text-muted);
 }
 
-#close-account:hover, #remove-project:hover {
-    background-color: #ffebea;
+#suggestions-row td {
+    border-top: 0;
+    font-size: 85%;
+    padding-top: 20px;
 }
 
-.table td.overall-status {
+#team-table th {
     border-top: 0;
 }
 
-.table.badges th {
-    border-top: 0;
-    color: #777777;
-    font-weight: normal;
-    font-size: 12px;
-    padding-top: 32px;
+#team-table .email {
+    max-width: 340px;
+    word-wrap: break-word;
+
 }
 
-#badges-json, #badges-shields {
-    display: none;
+.page-project .panel-footer {
+    max-width: 100%;
+    word-wrap: break-word;
 }
 
-#badges-shields label:first-child {
-    margin: 20px 0 10px 0;
+#transfer-request {
+    border: 5px solid #ffdc3e;
 }
 
-.json-response code {
-    display: inline-block;
-    background: #eee;
-    padding: 3px;
+#transfer-request .settings-block {
+    padding: 20px;
 }
