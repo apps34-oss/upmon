@@ -18,6 +18,8 @@ class Subscription(models.Model):
     renew_notice_date = models.DateField(null=True, blank=True)
     setup_date = models.DateField(null=True, blank=True)
 
-    def cancel(self) -> None:
-        # FIXME
-        pass
+    def cancel(self):
+        self.subscription_id = ""
+        self.plan_id = ""
+        self.plan_name = ""
+        self.save()

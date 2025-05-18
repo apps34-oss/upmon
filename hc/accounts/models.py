@@ -323,7 +323,12 @@ class Profile(models.Model):
 
     def num_checks_available(self) -> int:
         return self.check_limit - self.num_checks_used()
-
+        
+    def num_team_members_used(self) -> int:
+        """Return the number of team members across all user's projects."""
+        q = User.objects.filter(memberships__project__owner_id=self.user_id)
+        return q.distinct().count()
+        
     def can_accept(self, project: Project) -> bool:
         return project.check_set.count() <= self.num_checks_available()
 
