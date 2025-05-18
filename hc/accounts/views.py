@@ -85,6 +85,7 @@ def _make_user(email: str, tz: str | None = None, with_project: bool = True) -> 
     if with_project:
         project = Project(owner=user)
         project.badge_key = user.username
+        project.ping_key = _new_key(16)  # Automatically generate ping key
         project.save()
 
         check = Check(project=project)
@@ -349,6 +350,7 @@ def add_project(request: AuthenticatedHttpRequest) -> HttpResponse:
     project = Project(owner=request.user)
     project.code = project.badge_key = str(uuid4())
     project.name = form.cleaned_data["name"]
+    project.ping_key = _new_key(16)  # Automatically generate ping key
     project.save()
 
     return redirect("hc-checks", project.code)
