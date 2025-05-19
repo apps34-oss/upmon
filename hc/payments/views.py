@@ -3,7 +3,7 @@ from __future__ import annotations
 from uuid import UUID
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from hc.front.views import _get_project_for_user
