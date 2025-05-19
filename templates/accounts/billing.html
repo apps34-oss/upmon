@@ -23,170 +23,75 @@
         </ul>
     </div>
 
-    <div class="col-sm-9 col-md-9">
-        {% if messages %}
-        <div class="alert alert-danger">
-            <p>
-                <strong>We're sorry!</strong> There was a problem setting
-                up the subscription. Response from payment gateway:</p>
-
-            {% for message in messages %}
-            <p class="error-message">{{ message }}</p>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="panel panel-{{ set_plan_status }}">
-                    <div class="panel-body settings-block">
-                        <h2>Billing Plan</h2>
-
-                        <table class="table">
-                            <tr>
-                                <td>Current Plan</td>
-                                <td>{{ sub.plan_name|default:"Hobbyist" }}</td>
-                            </tr>
-                            {% if sub.subscription_id %}
-                            <tr>
-                                <td>Next Payment</td>
-                                <td id="next-billing-date">
-                                    <span class="loading">loading…</span>
-                                </td>
-                            </tr>
-                            {% endif %}
-                            <tr>
-                                <td>Checks Used</td>
-                                {% with num_checks=profile.num_checks_used %}
-                                <td {% if num_checks >= profile.check_limit %} class="at-limit" {% endif %}>
-                                    <span>{{ num_checks }} of {{ profile.check_limit }}</span>
-                                </td>
-                                {% endwith %}
-                            </tr>
-                            <tr>
-                                <td>Team Members</td>
-                                {% with num_checks=profile.num_team_members_used %}
-                                <td {% if num_checks >= profile.team_limit %} class="at-limit" {% endif %}>
-                                    <span>{{ num_checks }} of {{ profile.team_limit }}</span>
-                                </td>
-                                {% endwith %}
-                            </tr>
-                            <tr>
-                                <td>Log Entries</td>
-                                <td>
-                                    <span>Max {{ profile.ping_log_limit }}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Monthly SMS</td>
-                                <td {% if profile.sms_sent_this_month >= profile.sms_limit %}class="at-limit"{% elif profile.sms_sent_this_month >= profile.sms_limit|add:"-2" %}class="near-limit"{% endif %}>
-                                    <span>{{ profile.sms_sent_this_month }} of {{ profile.sms_limit }}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Monthly Calls</td>
-                                <td {% if profile.calls_sent_this_month >= profile.call_limit %}class="at-limit"{% elif profile.calls_sent_this_month >= profile.call_limit|add:"-2" %}class="near-limit"{% endif %}>
-                                    <span>{{ profile.calls_sent_this_month }} of {{ profile.call_limit }}</span>
-                                </td>
-                            </tr>
-                        </table>
-
-                    </div>
-                    {% if set_plan_status == "success" %}
-                    <div class="panel-footer">
-                        Your billing plan has been updated!
-                    </div>
-                    {% endif %}
-                </div>
-
-                {% if sub.plan_id %}
-                <div class="panel panel-{{ payment_method_status }}">
-                    <div class="panel-body settings-block">
-                        <h2>Payment Method</h2>
-                        <p id="payment-method">
-                            <span class="loading">loading…</span>
-                        </p>
-                        <button
-                                id="update-payment-method"
-                                class="btn btn-default pull-right">
-                            Change Payment Method
-                        </button>
-                    </div>
-                    {% if payment_method_status == "success" %}
-                    <div class="panel-footer">
-                        Your payment method has been updated!
-                    </div>
-                    {% endif %}
-                </div>
-                {% endif %}
-            </div>
-            <div class="col-sm-6">
-                <div class="panel panel-{{ address_status }}">
-                    <div class="panel-body settings-block">
-                        <h2>Billing Details</h2>
-
-                        {% if sub.address_id %}
-                        <div id="billing-address">
-                            <span class="loading">loading…</span>
-                        </div>
-                        {% else %}
-                        <p id="billing-address-missing" class="billing-empty">
-                            Not set
-                        </p>
-                        {% endif %}
-
-                        <button
-                                data-toggle="modal"
-                                data-target="#billing-address-modal"
-                                class="btn btn-default pull-right">
-                            Change Billing Details
-                        </button>
-                    </div>
-                    {% if address_status == "success" %}
-                    <div class="panel-footer">
-                        Your billing details have been updated!
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <div class="panel panel-{{ send_invoices_status }}">
+    <div class="col-sm-9 col-md-6">
+        <div class="panel panel-{{ set_plan_status }}">
             <div class="panel-body settings-block">
-                <h2>Invoices to Email</h2>
+                <h2>Billing Plan</h2>
 
-                <p id="invoice-emailing-status">
-                    {% if sub.send_invoices %}
-                    Send the invoice to
-                    {{ sub.invoice_email|default:request.user.email }}
-                    each time my payment method is successfully charged.
-                    {% else %}
-                    Do not email invoices to me.
+                <table class="table">
+                    <tr>
+                        <td>Current Plan</td>
+                        <td>{{ sub.plan_name|default:"Free" }}</td>
+                    </tr>
+                    {% if sub.subscription_id %}
+                    <tr>
+                        <td>Next Payment</td>
+                        <td id="next-billing-date">
+                            <span class="loading">loading…</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Manage Subscription</td>
+                        <td>
+                            <a href="https://billing.stripe.com/p/login/test_7sY4gs1pj9ox1Kb4p51VK00"
+                               class="btn btn-sm btn-default"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                                Stripe Customer Portal
+                            </a>
+                        </td>
+                    </tr>
                     {% endif %}
-                </p>
+                    <tr>
+                        <td>Checks Used</td>
+                        {% with num_checks=profile.num_checks_used %}
+                        <td {% if num_checks >= profile.check_limit %} class="at-limit" {% endif %}>
+                            <span>{{ num_checks }} of {{ profile.check_limit }}</span>
+                        </td>
+                        {% endwith %}
+                    </tr>
+                    <tr>
+                        <td>Team Members</td>
+                        {% with num_checks=profile.num_team_members_used %}
+                        <td {% if num_checks >= profile.team_limit %} class="at-limit" {% endif %}>
+                            <span>{{ num_checks }} of {{ profile.team_limit }}</span>
+                        </td>
+                        {% endwith %}
+                    </tr>
+                    <tr>
+                        <td>Log Entries</td>
+                        <td>
+                            <span>Max {{ profile.ping_log_limit }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Monthly SMS</td>
+                        <td {% if profile.sms_sent_this_month >= profile.sms_limit %}class="at-limit"{% elif profile.sms_sent_this_month >= profile.sms_limit|add:"-2" %}class="near-limit"{% endif %}>
+                            <span>{{ profile.sms_sent_this_month }} of {{ profile.sms_limit }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Monthly Calls</td>
+                        <td {% if profile.calls_sent_this_month >= profile.call_limit %}class="at-limit"{% elif profile.calls_sent_this_month >= profile.call_limit|add:"-2" %}class="near-limit"{% endif %}>
+                            <span>{{ profile.calls_sent_this_month }} of {{ profile.call_limit }}</span>
+                        </td>
+                    </tr>
+                </table>
 
-                <button
-                        data-toggle="modal"
-                        data-target="#invoice-emailing-modal"
-                        class="btn btn-default pull-right">
-                    Change Preference
-                </button>
             </div>
-            {% if send_invoices_status == "success" %}
-            <div class="panel-footer">
-                Your preferences have been updated!
-            </div>
-            {% endif %}
+
         </div>
 
-        <div class="panel panel-default">
-            <div class="panel-body settings-block">
-                <h2>Billing History</h2>
-                <div id="billing-history">
-                    <span class="loading">loading…</span>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
