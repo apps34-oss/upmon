@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-from typing import cast
 from uuid import UUID
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 
@@ -42,9 +40,8 @@ def billing(request: AuthenticatedHttpRequest) -> HttpResponse:
     if user_id is not None:
         sub = Subscription.objects.filter(user_id=user_id).first()
         if sub is None:
-            # Cast to authenticated User since we're in a login_required view
-            user = cast(User, request.user)
-            sub = Subscription(user=user)
+            # Since we're in a login_required view, we know this is an authenticated user
+            sub = Subscription(user=request.user)
     else:
         sub = None
 
