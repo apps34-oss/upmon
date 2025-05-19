@@ -10,7 +10,7 @@ from hc.front.views import _get_project_for_user
 from hc.payments.models import Subscription
 
 
-def pricing(request, code=None):
+def pricing(request: HttpRequest, code: str | None = None) -> HttpResponse:
     project = None
     if code:
         if not request.user.is_authenticated:
@@ -31,7 +31,7 @@ def pricing(request, code=None):
     return render(request, "payments/pricing.html", ctx)
 
 @login_required
-def billing(request):
+def billing(request: HttpRequest) -> HttpResponse:
     # Don't use Subscription.objects.for_user method here, so a
     # subscription object is not created just by viewing a page.
     sub = Subscription.objects.filter(user_id=request.user.id).first()
