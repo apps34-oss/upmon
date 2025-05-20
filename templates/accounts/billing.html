@@ -320,9 +320,14 @@
 {% endblock %}
 
 {% block scripts %}
-<script src=""></script>
 {% compress js %}
 <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script>
+    $(function() {
+        // Enable all dropdown toggles
+        $('.dropdown-toggle').dropdown();
+    });
+</script>
 {% endcompress %}
 {% endblock %}
