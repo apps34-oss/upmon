@@ -11,8 +11,28 @@
                 If a {% site_name %} account exists for this email address,
                 you will receive a login link in your email shortly.
             </p>
+            {% if registration_open %}
+            <p>
+                If you don't have an account yet, you can 
+                <a href="#" data-toggle="modal" data-target="#signup-modal">sign up here</a>.
+            </p>
+            {% endif %}
         </div>
     </div>
 </div>
 
+{% if registration_open %}
+{% include "front/signup_modal.html" %}
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{% if registration_open %}
+{% load compress static %}
+{% compress js %}
+<script src="{% static 'js/bootstrap-native.min.js' %}"></script>
+<script src="{% static 'js/signup.js' %}"></script>
+{% endcompress %}
+{% endif %}
 {% endblock %}
