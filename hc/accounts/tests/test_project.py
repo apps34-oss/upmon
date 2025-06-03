@@ -60,7 +60,7 @@ class ProjectTestCase(BaseTestCase):
         self.project.refresh_from_db()
         self.assertEqual(len(self.project.api_key), 73)
         self.assertContains(r, "key-created-modal")
-        self.assertContains(r, "hcw_" + self.project.api_key[:8])
+        self.assertContains(r, "umw_" + self.project.api_key[:8])
 
     def test_it_creates_readonly_key(self) -> None:
         self.client.login(username="alice@example.org", password="password")
@@ -72,7 +72,7 @@ class ProjectTestCase(BaseTestCase):
         self.project.refresh_from_db()
         self.assertEqual(len(self.project.api_key_readonly), 73)
         self.assertContains(r, "key-created-modal")
-        self.assertContains(r, "hcr_" + self.project.api_key_readonly[:8])
+        self.assertContains(r, "umr_" + self.project.api_key_readonly[:8])
 
     def test_it_requires_rw_access_to_create_key(self) -> None:
         self.bobs_membership.role = "r"

@@ -493,12 +493,12 @@ class Project(models.Model):
         return key, secret[:8] + "." + digest.hex()
 
     def set_api_key(self) -> str:
-        key, key_hash = self._make_api_key("hcw_")
+        key, key_hash = self._make_api_key("umw_")
         self.api_key = key_hash
         return key
 
     def set_api_key_readonly(self) -> str:
-        key, key_hash = self._make_api_key("hcr_")
+        key, key_hash = self._make_api_key("umr_")
         self.api_key_readonly = key_hash
         return key
 
@@ -509,7 +509,7 @@ class Project(models.Model):
                 break
 
     def compare_api_key(self, key: str) -> bool:
-        if key.startswith("hcr_"):
+        if key.startswith("umr_"):
             expected = self.api_key_readonly
         else:
             expected = self.api_key
