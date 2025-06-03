@@ -258,7 +258,8 @@ def signup(request: HttpRequest) -> HttpResponse:
 
 
 def login_link_sent(request: HttpRequest) -> HttpResponse:
-    return render(request, "accounts/login_link_sent.html")
+    ctx = {"registration_open": settings.REGISTRATION_OPEN}
+    return render(request, "accounts/login_link_sent.html", ctx)
 
 
 def check_token(
