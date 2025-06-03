@@ -24,14 +24,14 @@
     padding: 10px 8px;
 }
 
-.hobbyist h1 {
-    color: var(--plan-hobbyist-color);
-    border-bottom: 3px solid var(--plan-hobbyist-border);
+.free h1 {
+    color: var(--plan-free-color);
+    border-bottom: 3px solid var(--plan-free-border);
 }
 
-.supporter h1 {
-    color: var(--plan-supporter-color);
-    border-bottom: 3px solid var(--plan-supporter-border);
+.pro h1 {
+    color: var(--plan-pro-color);
+    border-bottom: 3px solid var(--plan-pro-border);
 }
 
 .business h1 {
@@ -39,16 +39,16 @@
     border-bottom: 3px solid var(--plan-business-border);
 }
 
-.business-plus h1 {
-    color: var(--plan-business-plus-color);
-    border-bottom: 3px solid var(--plan-business-plus-border);
+.enterprise h1 {
+    color: var(--plan-enterprise-color);
+    border-bottom: 3px solid var(--plan-enterprise-border);
 }
 
 .mo {
     font-size: 16px;
 }
 
-.plan .btn  {
+/*.plan .btn  {
     font-weight: bold;
     color: #1ea65a;
     border-color: #1ea65a;
@@ -63,7 +63,7 @@
     color: #fff;
     background: #22bc66;
     border-color: #22bc66;
-}
+}*/
 
 .error-message {
     font-family: monospace;

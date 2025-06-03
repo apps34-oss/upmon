@@ -14,34 +14,11 @@
 {% block content %}
 <section id="plans">
     <div class="container">
-        {% if request.user.is_authenticated %}
-        <div class="row">
-            <div class="col-md-12">
-                <div id="subscription-status" class="jumbotron">
-                    <p>
-                        {% if sub.plan_id %}
-                        Your account is currently on the
-                        <strong>{{ sub.plan_name }}</strong>
-                        plan. Thank you for supporting {{ site_name }}!
-                        {% else %}
-                        Your account is currently on the
-                        <strong>{{ sub.plan_name|default:"Free" }}</strong> plan.
-                        {% endif  %}
-                    </p>
-                    <p>
-                        {% if sub.plan_id %}
-                        <a class="btn btn-default" href="{% url 'hc-billing' %}">Billing Details</a>
-                        {% else %}
-                        <a class="btn btn-default" href="https://billing.stripe.com/p/login/test_7sY4gs1pj9ox1Kb4p51VK00">Billing Details and Plan Upgrades</a>
-                        {% endif %}
-                    </p>
-                </div>
-            </div>
-        </div>
-        {% else %}
+        {% if not request.user.is_authenticated %}
         <div class="row">
             <div class="col-sm-12 text-center">
-                <h1 id="pricing-tagline">Monitor 20 Cron Jobs for Free. Affordable Plans When You Need More.</h1>
+                <h1 id="pricing-tagline">Monitor 5 Cron Jobs for Free. Affordable Plans When You Need More.</h1>
+                <p class="text-success"><strong>Get 2 months free with annual billing!</strong></p>
             </div>
         </div>
         {% endif %}
@@ -49,42 +26,49 @@
         <div class="row">
             <!-- Free -->
             <div class="col-sm-6 col-md-3 text-center">
-                <div class="panel panel-default plan hobbyist">
+                <div class="panel panel-default plan free">
                     <div class="panel-body text-center">
                         <h1>Free</h1>
                         <h2>$0 <span class="mo">/ month</span></h2>
                     </div>
                     <ul class="text-center">
-                        <li><i class="fa fa-check"></i> 20 checks</li>
+                        <li><i class="fa fa-check"></i> 5 checks</li>
                         <li>
-                            <span data-help="team-size-help">3 team members</span>
+                            <span data-help="team-size-help">1 team members</span>
                         </li>
                         <li>
-                            <span data-help="log-limit-help">100 log entries per check</span>
+                            <span data-help="log-limit-help">20 log entries per check</span>
                         </li>
                         <li>API access</li>
                         <li>
-                            <span data-help="sms-help">5 SMS &amp; WhatsApp credits</span>
+                            <span data-help="sms-help">0 SMS &amp; WhatsApp credits</span>
                         </li>
-                        <li>&nbsp;</li>
+                        <li>Email support</li>
                         <li>&nbsp;</li>
                     </ul>
 
-                    {% if not request.user.is_authenticated %}
                     <div class="panel-footer">
-                        <a href="#" data-toggle="modal" data-target="#signup-modal" class="btn">Sign Up</a>
+                        {% if not request.user.is_authenticated %}
+                        <!-- If user is not logged in, show Sign Up button -->
+                        <a href="#" data-toggle="modal" data-target="#signup-modal" class="btn btn-primary">Sign Up</a>
+                        {% elif not sub.plan_id %}
+                        <!-- If on free plan, show Current Plan link -->
+                        <a href="{% url 'hc-billing' %}" class="btn btn-info">Current Plan</a>
+                        {% else %}
+                        <!-- If on paid plan, show Change Plan button -->
+                        <a href="{% url 'hc-customer-portal' %}" class="btn btn-primary">Change Plan</a>
+                        {% endif %}
                     </div>
-                    {% endif %}
                 </div>
             </div>
 
-            <!-- Supporter -->
+            <!-- Pro -->
             <div class="col-sm-6 col-md-3 text-center">
-                <div class="panel panel-default plan supporter">
+                <div class="panel panel-default plan pro">
                     <div class="panel-body text-center free">
-                        <h1>Supporter</h1>
+                        <h1>Pro</h1>
                         <h2>
-                            <span id="supporter-price">$5</span>
+                            <span id="pro-price">$10</span>
                             <span class="mo">/ month</span>
                         </h2>
                     </div>
@@ -101,18 +85,32 @@
                             <span data-help="sms-help">5 SMS &amp; WhatsApp credits</span>
                         </li>
                         <li>
-                            <span data-help="phone-call-help">5 phone call credits</span>
+                            <span data-help="phone-call-help">2 phone call credits</span>
                         </li>
-                        <li>Email support</li>
+                        <li>Email and chat support</li>
                     </ul>
 
-                    {% if not request.user.is_authenticated %}
                     <div class="panel-footer">
-                        <a href="#" data-toggle="modal" data-target="#signup-modal" class="btn">
+                        {% if not request.user.is_authenticated %}
+                        <!-- If user is not logged in, show Sign Up button -->
+                        <a href="#" data-toggle="modal" data-target="#signup-modal" class="btn btn-primary">
                             Sign Up
                         </a>
+                        {% elif not sub.plan_id %}
+                        <!-- If on free plan, show Subscribe button -->
+                        <a href="{% url 'hc-checkout' %}?plan=pro" class="btn btn-primary">
+                            Subscribe
+                        </a>
+                        {% elif sub.plan_id == "pro" %}
+                        <!-- If this is the current plan, show Current Plan link -->
+                        <a href="{% url 'hc-billing' %}" class="btn btn-info">Current Plan</a>
+                        {% else %}
+                        <!-- If on different paid plan, show Change Plan button -->
+                        <a href="{% url 'hc-customer-portal' %}?update=pro" class="btn btn-primary">
+                            Change Plan
+                        </a>
+                        {% endif %}
                     </div>
-                    {% endif %}
                 </div>
             </div>
 
@@ -122,7 +120,7 @@
                     <div class="panel-body text-center">
                         <h1>Business</h1>
                         <h2>
-                            <span id="business-price">$20</span>
+                            <span id="business-price">$30</span>
                             <span class="mo">/ month</span>
                         </h2>
                     </div>
@@ -137,60 +135,82 @@
                         </li>
                         <li>API access</li>
                         <li>
-                            <span data-help="sms-help">50 SMS &amp; WhatsApp credits</span>
+                            <span data-help="sms-help">30 SMS &amp; WhatsApp credits</span>
                         </li>
                         <li>
-                            <span data-help="phone-call-help">20 phone call credits</span>
+                            <span data-help="phone-call-help">10 phone call credits</span>
                         </li>
-                        <li>Email support</li>
+                        <li>Email and chat support</li>
                     </ul>
 
-                    {% if not request.user.is_authenticated %}
                     <div class="panel-footer">
-                        <a href="#" data-toggle="modal" data-target="#signup-modal" class="btn">
+                        {% if not request.user.is_authenticated %}
+                        <!-- If user is not logged in, show Sign Up button -->
+                        <a href="#" data-toggle="modal" data-target="#signup-modal" class="btn btn-primary">
                             Sign Up
                         </a>
+                        {% elif not sub.plan_id %}
+                        <!-- If on free plan, show Subscribe button -->
+                        <a href="{% url 'hc-checkout' %}?plan=business" class="btn btn-primary">
+                            Subscribe
+                        </a>
+                        {% elif sub.plan_id == "business" %}
+                        <!-- If this is the current plan, show Current Plan link -->
+                        <a href="{% url 'hc-billing' %}" class="btn btn-info">Current Plan</a>
+                        {% else %}
+                        <!-- If on different paid plan, show Change Plan button -->
+                        <a href="{% url 'hc-customer-portal' %}?update=business" class="btn btn-primary">
+                            Change Plan
+                        </a>
+                        {% endif %}
                     </div>
-                    {% endif %}
                 </div>
             </div>
 
-            <!-- Business Plus -->
+            <!-- Enterprise -->
             <div class="col-sm-6 col-md-3 text-center">
-                <div class="panel panel-default plan business-plus">
+                <div class="panel panel-default plan enterprise">
                     <div class="panel-body text-center">
-                        <h1>Business Plus</h1>
+                        <h1>Enterprise</h1>
                         <h2>
-                            <span id="business-plus-price">$80</span>
-                            <span class="mo">/ month</span>
+                            <span id="enterprise-price">Custom</span>
                         </h2>
                     </div>
 
                     <ul class="text-center">
-                        <li>1000 checks</li>
+                        <li>Custom checks</li>
                         <li>
-                            <span data-help="team-size-help">Unlimited team members</span>
+                            <span data-help="team-size-help">Custom team members</span>
                         </li>
                         <li>
-                            <span data-help="log-limit-help">1000 log entries per check</span>
+                            <span data-help="log-limit-help">Custom log entries per check</span>
                         </li>
                         <li>API access</li>
                         <li>
-                            <span data-help="sms-help">500 SMS &amp; WhatsApp credits</span>
+                            <span data-help="sms-help">Custom SMS &amp; WhatsApp credits</span>
                         </li>
                         <li>
-                            <span data-help="phone-call-help">100 phone call credits</span>
+                            <span data-help="phone-call-help">Custom phone call credits</span>
                         </li>
-                        <li>Priority email support</li>
+                        <li>Priority email and chat support</li>
                     </ul>
 
-                    {% if not request.user.is_authenticated %}
                     <div class="panel-footer">
-                        <a href="#" data-toggle="modal" data-target="#signup-modal" class="btn">
+                        {% if not request.user.is_authenticated %}
+                        <!-- If user is not logged in, show Sign Up button -->
+                        <a href="#" data-toggle="modal" data-target="#signup-modal" class="btn btn-primary">
                             Sign Up
                         </a>
+                        {% elif sub.plan_name == "enterprise" %}
+                        <!-- If this is the current plan, show Current Plan link -->
+                        <a href="{% url 'hc-billing' %}" class="btn btn-info">Current Plan</a>
+                        {% else %}
+                        <!-- For Enterprise plan, always show Contact Us button -->
+                        <a href="mailto:enterprise@upmon.com" class="btn btn-primary">
+                            Contact Us
+                        </a>
+                        {% endif %}
                     </div>
-                    {% endif %}
                 </div>
             </div>
         </div>
@@ -314,6 +334,12 @@
     $(function() {
         // Enable all dropdown toggles
         $('.dropdown-toggle').dropdown();
+    });
+    $('[data-help]').tooltip({
+        html: true,
+        title: function() {
+            return $("#" + this.dataset.help).html();
+        }
     });
 </script>
 {% endcompress %}

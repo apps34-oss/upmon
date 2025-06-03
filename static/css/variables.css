@@ -48,12 +48,12 @@
     --panel-success-bg: #dff0d8;
     --plan-business-border:  #90CAF9;
     --plan-business-color: #141c22;
-    --plan-business-plus-border:  #BCAAA4;
-    --plan-business-plus-color: #221f1e;
-    --plan-hobbyist-border:  #A5D6A7;
-    --plan-hobbyist-color: #0a220c;
-    --plan-supporter-border:  #FFE082;
-    --plan-supporter-color: #1d190f;
+    --plan-enterprise-border:  #BCAAA4;
+    --plan-enterprise-color: #221f1e;
+    --plan-free-border:  #A5D6A7;
+    --plan-free-color: #0a220c;
+    --plan-pro-border:  #FFE082;
+    --plan-pro-color: #1d190f;
     --pre-bg: #f5f5f5;
     --selectize-tag-bg: #efefef;
     --small-text-color: #111;
