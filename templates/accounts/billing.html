@@ -31,27 +31,8 @@
                 <table class="table">
                     <tr>
                         <td>Current Plan</td>
-                        <td>{{ sub.plan_name|default:"Free" }}</td>
+                        <td><strong>{{ sub.plan_name|default:"Free" }}</strong></td>
                     </tr>
-                    {% if sub.subscription_id %}
-                    <tr>
-                        <td>Next Payment</td>
-                        <td id="next-billing-date">
-                            <span class="loading">loading…</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Manage Subscription</td>
-                        <td>
-                            <a href="https://billing.stripe.com/p/login/test_7sY4gs1pj9ox1Kb4p51VK00"
-                               class="btn btn-sm btn-default"
-                               target="_blank"
-                               rel="noopener noreferrer">
-                                Stripe Customer Portal
-                            </a>
-                        </td>
-                    </tr>
-                    {% endif %}
                     <tr>
                         <td>Checks Used</td>
                         {% with num_checks=profile.num_checks_used %}
@@ -69,12 +50,6 @@
                         {% endwith %}
                     </tr>
                     <tr>
-                        <td>Log Entries</td>
-                        <td>
-                            <span>Max {{ profile.ping_log_limit }}</span>
-                        </td>
-                    </tr>
-                    <tr>
                         <td>Monthly SMS</td>
                         <td {% if profile.sms_sent_this_month >= profile.sms_limit %}class="at-limit"{% elif profile.sms_sent_this_month >= profile.sms_limit|add:"-2" %}class="near-limit"{% endif %}>
                             <span>{{ profile.sms_sent_this_month }} of {{ profile.sms_limit }}</span>
@@ -86,7 +61,23 @@
                             <span>{{ profile.calls_sent_this_month }} of {{ profile.call_limit }}</span>
                         </td>
                     </tr>
+                    {% if sub.plan_id and sub.next_billing_date %}
+                    <tr>
+                        <td>Next Billing Date</td>
+                        <td>{{ sub.next_billing_date|date:"F j, Y" }}</td>
+                    </tr>
+                    {% endif %}
                 </table>
+                <div class="pull-right">
+                    <a href="{% url 'hc-pricing' %}" class="btn btn-default">
+                        Upgrade Plan
+                    </a>
+                    {% if sub.customer_id %}
+                    <a href="{% url 'hc-customer-portal' %}" class="btn btn-default">
+                        Manage Subscription
+                    </a>
+                    {% endif %}
+                </div>
 
             </div>
 
