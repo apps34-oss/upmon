@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import Any, Dict
 from uuid import UUID
 
 import hmac
@@ -27,9 +28,9 @@ from django.utils import timezone
 logger = logging.getLogger(__name__)
 
 
-def _make_apps34_request(url: str, payload: dict) -> HttpResponse:
+def _make_apps34_request(url: str, payload: Dict[str, Any]) -> Any:
     """Make authenticated request to stripe.apps34.com"""
-    import requests
+    import requests  # type: ignore
     
     # Generate signature
     apps34_secret = os.getenv("APPS34_SECRET", "---")
@@ -51,7 +52,12 @@ def _make_apps34_request(url: str, payload: dict) -> HttpResponse:
         return response
     except Exception as e:
         logger.error(f"Error making request to {url}: {e}")
-        return None
+        # Return a mock response object with status_code attribute
+        class ErrorResponse:
+            status_code = 500
+            def json(self) -> Dict[str, Any]:
+                return {}
+        return ErrorResponse()
 
 
 def pricing(request: HttpRequest, code: UUID | None = None) -> HttpResponse:
@@ -115,8 +121,6 @@ def create_customer_portal_session(request: AuthenticatedHttpRequest) -> HttpRes
         payload["update"] = request.GET["update"]
     
     response = _make_apps34_request(url, payload)
-    if not response:
-        return HttpResponse("Payment service configuration error", status=500)
     
     if response.status_code == 200:
         data = response.json()
@@ -153,8 +157,6 @@ def create_checkout_session(request: AuthenticatedHttpRequest) -> HttpResponse:
         payload["cancel_url"] = request.GET["cancel_url"]
     
     response = _make_apps34_request(url, payload)
-    if not response:
-        return HttpResponse("Payment service configuration error", status=500)
     
     if response.status_code == 200:
         data = response.json()
