@@ -39,13 +39,13 @@ def lookup_project(api_key: str, require_rw: bool) -> Project | None:
     """
 
     # Hashed keys
-    if api_key.startswith("hcw_"):
+    if api_key.startswith("umw_"):
         secret8 = api_key[4:12]
         for project in Project.objects.filter(api_key__startswith=secret8):
             if project.compare_api_key(api_key):
                 return project
 
-    if not require_rw and api_key.startswith("hcr_"):
+    if not require_rw and api_key.startswith("umr_"):
         secret8 = api_key[4:12]
         for project in Project.objects.filter(api_key_readonly__startswith=secret8):
             if project.compare_api_key(api_key):
@@ -123,7 +123,7 @@ def authorize_read(f: ViewFunc) -> ViewFunc:
 
         request.project = project
         request.readonly = (
-            api_key.startswith("hcr_") or api_key == request.project.api_key_readonly
+            api_key.startswith("umr_") or api_key == request.project.api_key_readonly
         )
         request.v = _get_api_version(request)
         return f(request, *args, **kwds)
