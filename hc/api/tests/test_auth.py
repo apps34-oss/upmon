@@ -64,8 +64,8 @@ class AuthTestCase(BaseTestCase):
         self, mock_compare: Mock
     ) -> None:
         # Database has a plain text API key "X" * 32
-        # We pass "hcw_" + "X" * 28.
+        # We pass "upw_" + "X" * 28.
         # We should recognize that the DB has a plain text key not a hashed key,
         # and we *should not* call hmac.compare_digest()
-        self.post(key="hcw_" + "X" * 28)
+        self.post(key="upw_" + "X" * 28)
         self.assertFalse(mock_compare.called)
