@@ -27,17 +27,15 @@ from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
+APPS34_SECRET = os.getenv("APPS34_SECRET", "---")
 
 def _make_apps34_request(url: str, payload: Dict[str, Any]) -> Any:
     """Make authenticated request to stripe.apps34.com"""
     import requests  # type: ignore
     
-    # Generate signature
-    apps34_secret = os.getenv("APPS34_SECRET", "---")
-
     payload_json = json.dumps(payload, sort_keys=True)
     signature = hmac.new(
-        apps34_secret.encode(),
+        APPS34_SECRET.encode(),
         payload_json.encode(),
         sha256
     ).hexdigest()
@@ -172,7 +170,27 @@ def create_checkout_session(request: AuthenticatedHttpRequest) -> HttpResponse:
 @require_POST
 def subscription_webhook(request: HttpRequest) -> HttpResponse:
     try:
-        data = json.loads(request.body.decode("utf-8"))
+        # Verify signature
+        signature = request.META.get("HTTP_X_SIGNATURE", "")
+        
+        if not signature:
+            logger.error("Missing X-Signature header")
+            return HttpResponse("Missing signature", status=400)
+        
+        # Calculate expected signature
+        payload = request.body.decode("utf-8")
+        expected_signature = hmac.new(
+            APPS34_SECRET.encode(),
+            payload.encode(),
+            sha256
+        ).hexdigest()
+        
+        # Compare signatures
+        if not hmac.compare_digest(signature, expected_signature):
+            logger.error("Invalid signature")
+            return HttpResponse("Invalid signature", status=403)
+        
+        data = json.loads(payload)
         logger.info(f"Received subscription webhook: {data.get('id', 'unknown-id')}")
 
         # Extract the essential fields
