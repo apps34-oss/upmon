@@ -17,22 +17,22 @@ in your account.
 Endpoint Name                                         | Endpoint Address
 ------------------------------------------------------|-------
 **Checks**|
-[List existing checks](#list-checks)                  | `GET SITE_ROOT/api/v2/checks/`
-[Get a single check](#get-check)                      | `GET SITE_ROOT/api/v2/checks/<uuid>`<br>`GET SITE_ROOT/api/v2/checks/<unique_key>`
-[Create a new check](#create-check)                   | `POST SITE_ROOT/api/v2/checks/`
-[Update an existing check](#update-check)             | `POST SITE_ROOT/api/v2/checks/<uuid>`
-[Pause monitoring of a check](#pause-check)           | `POST SITE_ROOT/api/v2/checks/<uuid>/pause`
-[Resume monitoring of a check](#resume-check)         | `POST SITE_ROOT/api/v2/checks/<uuid>/resume`
-[Delete check](#delete-check)                         | `DELETE SITE_ROOT/api/v2/checks/<uuid>`
+[List existing checks](#list-checks)                  | `GET API_ROOT/v2/checks/`
+[Get a single check](#get-check)                      | `GET API_ROOT/v2/checks/<uuid>`<br>`GET API_ROOT/v2/checks/<unique_key>`
+[Create a new check](#create-check)                   | `POST API_ROOT/v2/checks/`
+[Update an existing check](#update-check)             | `POST API_ROOT/v2/checks/<uuid>`
+[Pause monitoring of a check](#pause-check)           | `POST API_ROOT/v2/checks/<uuid>/pause`
+[Resume monitoring of a check](#resume-check)         | `POST API_ROOT/v2/checks/<uuid>/resume`
+[Delete check](#delete-check)                         | `DELETE API_ROOT/v2/checks/<uuid>`
 **Pings**|
-[List check's logged pings](#list-pings)              | `GET SITE_ROOT/api/v2/checks/<uuid>/pings/`
-[Get a ping's logged body](#ping-body)                | `GET SITE_ROOT/api/v2/checks/<uuid>/pings/<n>/body`
+[List check's logged pings](#list-pings)              | `GET API_ROOT/v2/checks/<uuid>/pings/`
+[Get a ping's logged body](#ping-body)                | `GET API_ROOT/v2/checks/<uuid>/pings/<n>/body`
 **Flips**|
-[List check's status changes](#list-flips)   | `GET SITE_ROOT/api/v2/checks/<uuid>/flips/`<br>`GET SITE_ROOT/api/v2/checks/<unique_key>/flips/`
+[List check's status changes](#list-flips)   | `GET API_ROOT/v2/checks/<uuid>/flips/`<br>`GET API_ROOT/v2/checks/<unique_key>/flips/`
 **Integrations**|
-[List existing integrations](#list-channels) | `GET SITE_ROOT/api/v2/channels/`
+[List existing integrations](#list-channels) | `GET API_ROOT/v2/channels/`
 **Badges**|
-[List project's badges](#list-badges)                  | `GET SITE_ROOT/api/v2/badges/`
+[List project's badges](#list-badges)                  | `GET API_ROOT/v2/badges/`
 
 ## Changes From v1
 
@@ -95,7 +95,7 @@ The response may contain a JSON document with additional data.
 
 ## List Existing Checks {: #list-checks .rule }
 
-`GET SITE_ROOT/api/v2/checks/`
+`GET API_ROOT/v2/checks/`
 
 Returns a list of checks belonging to the user, optionally filtered by
 one or more tags.
@@ -110,7 +110,7 @@ tag=&lt;value&gt;
 
     Example:
 
-    `SITE_ROOT/api/v2/checks/?tag=foo&tag=bar`
+    `API_ROOT/v2/checks/?tag=foo&tag=bar`
 
 ### Response Codes
 
@@ -123,7 +123,7 @@ tag=&lt;value&gt;
 ### Example Request
 
 ```bash
-curl --header "X-Api-Key: your-api-key" SITE_ROOT/api/v2/checks/
+curl --header "X-Api-Key: your-api-key" API_ROOT/v2/checks/
 ```
 
 ### Example Response
@@ -150,9 +150,9 @@ curl --header "X-Api-Key: your-api-key" SITE_ROOT/api/v2/checks/
       "filter_subject": true,
       "filter_body": false,
       "ping_url": "PING_ENDPOINT31365bce-8da9-4729-8ff3-aaa71d56b712",
-      "update_url": "SITE_ROOT/api/v2/checks/31365bce-8da9-4729-8ff3-aaa71d56b712",
-      "pause_url": "SITE_ROOT/api/v2/checks/31365bce-8da9-4729-8ff3-aaa71d56b712/pause",
-      "resume_url": "SITE_ROOT/api/v2/checks/31365bce-8da9-4729-8ff3-aaa71d56b712/resume",
+      "update_url": "API_ROOT/v2/checks/31365bce-8da9-4729-8ff3-aaa71d56b712",
+      "pause_url": "API_ROOT/v2/checks/31365bce-8da9-4729-8ff3-aaa71d56b712/pause",
+      "resume_url": "API_ROOT/v2/checks/31365bce-8da9-4729-8ff3-aaa71d56b712/resume",
       "channels": "1bdea468-03bf-47b8-ab27-29a9dd0e4b94,51c6eb2b-2ae1-456b-99fe-6f1e0a36cd3c",
       "timeout": 3600
     },
@@ -175,9 +175,9 @@ curl --header "X-Api-Key: your-api-key" SITE_ROOT/api/v2/checks/
       "filter_subject": false,
       "filter_body": false,
       "ping_url": "PING_ENDPOINT803f680d-e89b-492b-82ef-2be7b774a92d",
-      "update_url": "SITE_ROOT/api/v2/checks/803f680d-e89b-492b-82ef-2be7b774a92d",
-      "pause_url": "SITE_ROOT/api/v2/checks/803f680d-e89b-492b-82ef-2be7b774a92d/pause",
-      "resume_url": "SITE_ROOT/api/v2/checks/803f680d-e89b-492b-82ef-2be7b774a92d/resume",
+      "update_url": "API_ROOT/v2/checks/803f680d-e89b-492b-82ef-2be7b774a92d",
+      "pause_url": "API_ROOT/v2/checks/803f680d-e89b-492b-82ef-2be7b774a92d/pause",
+      "resume_url": "API_ROOT/v2/checks/803f680d-e89b-492b-82ef-2be7b774a92d/resume",
       "channels": "1bdea468-03bf-47b8-ab27-29a9dd0e4b94,51c6eb2b-2ae1-456b-99fe-6f1e0a36cd3c",
       "schedule": "15 5 * * *",
       "tz": "UTC"
@@ -248,8 +248,8 @@ Example:
 ```
 
 ## Get a Single Check {: #get-check .rule }
-`GET SITE_ROOT/api/v2/checks/<uuid>`<br>
-`GET SITE_ROOT/api/v2/checks/<unique_key>`
+`GET API_ROOT/v2/checks/<uuid>`<br>
+`GET API_ROOT/v2/checks/<unique_key>`
 
 Returns a JSON representation of a single check. Accepts either check's UUID or
 the `unique_key` (a field derived from UUID and returned by API responses when
@@ -273,7 +273,7 @@ using the read-only API key) as an identifier.
 ### Example Request
 
 ```bash
-curl --header "X-Api-Key: your-api-key" SITE_ROOT/api/v2/checks/<uuid>
+curl --header "X-Api-Key: your-api-key" API_ROOT/v2/checks/<uuid>
 ```
 
 ### Example Response
@@ -298,9 +298,9 @@ curl --header "X-Api-Key: your-api-key" SITE_ROOT/api/v2/checks/<uuid>
   "filter_subject": true,
   "filter_body": false,
   "ping_url": "PING_ENDPOINT803f680d-e89b-492b-82ef-2be7b774a92d",
-  "update_url": "SITE_ROOT/api/v2/checks/803f680d-e89b-492b-82ef-2be7b774a92d",
-  "pause_url": "SITE_ROOT/api/v2/checks/803f680d-e89b-492b-82ef-2be7b774a92d/pause",
-  "resume_url": "SITE_ROOT/api/v2/checks/803f680d-e89b-492b-82ef-2be7b774a92d/resume",
+  "update_url": "API_ROOT/v2/checks/803f680d-e89b-492b-82ef-2be7b774a92d",
+  "pause_url": "API_ROOT/v2/checks/803f680d-e89b-492b-82ef-2be7b774a92d/pause",
+  "resume_url": "API_ROOT/v2/checks/803f680d-e89b-492b-82ef-2be7b774a92d/resume",
   "channels": "1bdea468-03bf-47b8-ab27-29a9dd0e4b94,51c6eb2b-2ae1-456b-99fe-6f1e0a36cd3c",
   "schedule": "15 5 * * *",
   "tz": "UTC"
@@ -346,7 +346,7 @@ easily construct these URLs themselves *if* they know the check's unique UUID.
 
 
 ## Create a Check {: #create-check .rule }
-`POST SITE_ROOT/api/v2/checks/`
+`POST API_ROOT/v2/checks/`
 
 Creates a new check and returns its ping URL.
 All request parameters are optional and will use their default
@@ -620,7 +620,7 @@ subject_fail
 ### Example Request
 
 ```bash
-curl SITE_ROOT/api/v2/checks/ \
+curl API_ROOT/v2/checks/ \
     --header "X-Api-Key: your-api-key" \
     --data '{"name": "Backups", "tags": "prod www", "timeout": 3600, "grace": 60}'
 ```
@@ -628,7 +628,7 @@ curl SITE_ROOT/api/v2/checks/ \
 Or, alternatively:
 
 ```bash
-curl SITE_ROOT/api/v2/checks/ \
+curl API_ROOT/v2/checks/ \
     --data '{"api_key": "your-api-key", "name": "Backups", "tags": "prod www", "timeout": 3600, "grace": 60}'
 ```
 
@@ -651,20 +651,20 @@ curl SITE_ROOT/api/v2/checks/ \
   "failure_kw": "",
   "filter_subject": false,
   "filter_body": false,
-  "pause_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pause",
-  "resume_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/resume",
+  "pause_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pause",
+  "resume_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/resume",
   "ping_url": "PING_ENDPOINTf618072a-7bde-4eee-af63-71a77c5723bc",
   "status": "new",
   "started": false,
   "tags": "prod www",
   "timeout": 3600,
-  "update_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc",
+  "update_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc",
 }
 ```
 
 ## Update an Existing Check {: #update-check .rule }
 
-`POST SITE_ROOT/api/v2/checks/<uuid>`
+`POST API_ROOT/v2/checks/<uuid>`
 
 Updates an existing check. All request parameters are optional. If you omit any
 parameter, SITE_NAME will leave its value unchanged.
@@ -913,7 +913,7 @@ subject_fail
 ### Example Request
 
 ```bash
-curl SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc \
+curl API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc \
     --header "X-Api-Key: your-api-key" \
     --data '{"name": "Backups", "tags": "prod www", "timeout": 3600, "grace": 60}'
 ```
@@ -921,7 +921,7 @@ curl SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc \
 Or, alternatively:
 
 ```bash
-curl SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc \
+curl API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc \
     --data '{"api_key": "your-api-key", "name": "Backups", "tags": "prod www", "timeout": 3600, "grace": 60}'
 ```
 
@@ -944,20 +944,20 @@ curl SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc \
   "failure_kw": "",
   "filter_subject": false,
   "filter_body": false,
-  "pause_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pause",
-  "resume_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/resume",
+  "pause_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pause",
+  "resume_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/resume",
   "ping_url": "PING_ENDPOINTf618072a-7bde-4eee-af63-71a77c5723bc",
   "status": "new",
   "started": false,
   "tags": "prod www",
   "timeout": 3600,
-  "update_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc",
+  "update_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc",
 }
 ```
 
 ## Pause Monitoring of a Check {: #pause-check .rule }
 
-`POST SITE_ROOT/api/v2/checks/<uuid>/pause`
+`POST API_ROOT/v2/checks/<uuid>/pause`
 
 Disables monitoring for a check without removing it. The check goes into a "paused"
 state. You can resume monitoring of the check by pinging it, or by running
@@ -982,7 +982,7 @@ This API call has no request parameters.
 ### Example Request
 
 ```bash
-curl SITE_ROOT/api/v2/checks/0c8983c9-9d73-446f-adb5-0641fdacc9d4/pause \
+curl API_ROOT/v2/checks/0c8983c9-9d73-446f-adb5-0641fdacc9d4/pause \
     --request POST --header "X-Api-Key: your-api-key" --data ""
 ```
 
@@ -1010,20 +1010,20 @@ header is sometimes required by some network proxies and web servers.
   "failure_kw": "",
   "filter_subject": false,
   "filter_body": false,
-  "pause_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pause",
-  "resume_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/resume",
+  "pause_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pause",
+  "resume_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/resume",
   "ping_url": "PING_ENDPOINTf618072a-7bde-4eee-af63-71a77c5723bc",
   "status": "paused",
   "started": false,
   "tags": "prod www",
   "timeout": 3600,
-  "update_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc"
+  "update_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc"
 }
 ```
 
 ## Resume Monitoring of a Check {: #resume-check .rule }
 
-`POST SITE_ROOT/api/v2/checks/<uuid>/resume`
+`POST API_ROOT/v2/checks/<uuid>/resume`
 
 Resumes a check. The check goes into the "new" state. Use this API call to resume
 the monitoring of checks that are in the paused state, and have the `manual_resume`
@@ -1051,7 +1051,7 @@ This API call has no request parameters.
 ### Example Request
 
 ```bash
-curl SITE_ROOT/api/v2/checks/0c8983c9-9d73-446f-adb5-0641fdacc9d4/resume \
+curl API_ROOT/v2/checks/0c8983c9-9d73-446f-adb5-0641fdacc9d4/resume \
     --request POST --header "X-Api-Key: your-api-key" --data ""
 ```
 
@@ -1079,21 +1079,21 @@ header is sometimes required by some network proxies and web servers.
   "failure_kw": "",
   "filter_subject": false,
   "filter_body": false,
-  "pause_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pause",
-  "resume_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/resume",
+  "pause_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pause",
+  "resume_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/resume",
   "ping_url": "PING_ENDPOINTf618072a-7bde-4eee-af63-71a77c5723bc",
   "status": "new",
   "started": false,
   "tags": "prod www",
   "timeout": 3600,
-  "update_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc"
+  "update_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc"
 }
 ```
 
 
 ## Delete Check {: #delete-check .rule }
 
-`DELETE SITE_ROOT/api/v2/checks/<uuid>`
+`DELETE API_ROOT/v2/checks/<uuid>`
 
 Permanently deletes the check from the user's account. Returns JSON representation of the
 check that was just deleted.
@@ -1117,7 +1117,7 @@ This API call has no request parameters.
 ### Example Request
 
 ```bash
-curl SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc \
+curl API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc \
     --request DELETE --header "X-Api-Key: your-api-key"
 ```
 
@@ -1140,20 +1140,20 @@ curl SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc \
   "failure_kw": "",
   "filter_subject": false,
   "filter_body": false,
-  "pause_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pause",
-  "resume_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/resume",
+  "pause_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pause",
+  "resume_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/resume",
   "ping_url": "PING_ENDPOINTf618072a-7bde-4eee-af63-71a77c5723bc",
   "status": "new",
   "started": false,
   "tags": "prod www",
   "timeout": 3600,
-  "update_url": "SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc",
+  "update_url": "API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc",
 }
 ```
 
 ## List check's logged pings {: #list-pings .rule }
 
-`GET SITE_ROOT/api/v2/checks/<uuid>/pings/`
+`GET API_ROOT/v2/checks/<uuid>/pings/`
 
 Returns a list of pings this check has received.
 
@@ -1178,7 +1178,7 @@ number of returned pings depends on the account's billing plan: 100 for free acc
 ### Example Request
 
 ```bash
-curl SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pings/ \
+curl API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pings/ \
     --header "X-Api-Key: your-api-key"
 ```
 
@@ -1240,7 +1240,7 @@ curl SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pings/ \
 
 ## Get a ping's logged body {: #ping-body .rule }
 
-`GET SITE_ROOT/api/v2/checks/<uuid>/pings/<n>/body`
+`GET API_ROOT/v2/checks/<uuid>/pings/<n>/body`
 
 Returns a ping's logged body. The response always has the `Content-Type: text/plain`
 response header and the ping body is returned verbatim in the response body.
@@ -1259,14 +1259,14 @@ response header and the ping body is returned verbatim in the response body.
 ### Example Request
 
 ```bash
-curl SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pings/397/body \
+curl API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/pings/397/body \
     --header "X-Api-Key: your-api-key"
 ```
 
 ## List check's status changes {: #list-flips .rule }
 
-`GET SITE_ROOT/api/v2/checks/<uuid>/flips/`<br>
-`GET SITE_ROOT/api/v2/checks/<unique_key>/flips/`
+`GET API_ROOT/v2/checks/<uuid>/flips/`<br>
+`GET API_ROOT/v2/checks/<unique_key>/flips/`
 
 Returns a list of "flips" this check has experienced. A flip is a change of status
 (from "down" to "up," or from "up" to "down").
@@ -1278,21 +1278,21 @@ seconds=&lt;value&gt;
 
     Example:
 
-    `SITE_ROOT/api/v2/checks/<uuid|unique_key>/flips/?seconds=3600`
+    `API_ROOT/v2/checks/<uuid|unique_key>/flips/?seconds=3600`
 
 start=&lt;value&gt;
 :   Returns flips that are newer than the specified UNIX timestamp.
 
     Example:
 
-    `SITE_ROOT/api/v2/checks/<uuid|unique_key>/flips/?start=1592214380`
+    `API_ROOT/v2/checks/<uuid|unique_key>/flips/?start=1592214380`
 
 end=&lt;value&gt;
 :   Returns flips that are older than the specified UNIX timestamp.
 
     Example:
 
-    `SITE_ROOT/api/v2/checks/<uuid|unique_key>/flips/?end=1592217980`
+    `API_ROOT/v2/checks/<uuid|unique_key>/flips/?end=1592217980`
 
 
 ### Response Codes
@@ -1315,7 +1315,7 @@ end=&lt;value&gt;
 ### Example Request
 
 ```bash
-curl SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/flips/ \
+curl API_ROOT/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/flips/ \
     --header "X-Api-Key: your-api-key"
 ```
 
@@ -1340,7 +1340,7 @@ curl SITE_ROOT/api/v2/checks/f618072a-7bde-4eee-af63-71a77c5723bc/flips/ \
 
 ## List Existing Integrations {: #list-channels .rule }
 
-`GET SITE_ROOT/api/v2/channels/`
+`GET API_ROOT/v2/channels/`
 
 Returns a list of integrations belonging to the project.
 
@@ -1355,7 +1355,7 @@ Returns a list of integrations belonging to the project.
 ### Example Request
 
 ```bash
-curl --header "X-Api-Key: your-api-key" SITE_ROOT/api/v2/channels/
+curl --header "X-Api-Key: your-api-key" API_ROOT/v2/channels/
 ```
 
 ### Example Response
@@ -1379,7 +1379,7 @@ curl --header "X-Api-Key: your-api-key" SITE_ROOT/api/v2/channels/
 
 ## List Project's Badges {: #list-badges .rule }
 
-`GET SITE_ROOT/api/v2/badges/`
+`GET API_ROOT/v2/badges/`
 
 Returns a map of all tags in the project, with badge URLs for each tag. SITE_NAME
 provides badges in a few different formats:
@@ -1409,7 +1409,7 @@ of all checks in the project.
 ### Example Request
 
 ```bash
-curl --header "X-Api-Key: your-api-key" SITE_ROOT/api/v2/badges/
+curl --header "X-Api-Key: your-api-key" API_ROOT/v2/badges/
 ```
 
 ### Example Response

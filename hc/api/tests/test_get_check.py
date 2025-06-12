@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import timedelta as td
 from uuid import UUID
 
+from django.conf import settings
 from django.utils.timezone import now
 
 from hc.api.models import Channel, Check
@@ -71,7 +72,7 @@ class GetCheckTestCase(BaseTestCase):
             doc["badge_url"], f"http://localhost:8000/b/2/{self.a1.badge_key}.svg"
         )
         self.assertEqual(
-            doc["update_url"], f"http://localhost:8000/api/v1/checks/{self.a1.code}"
+            doc["update_url"], f"{settings.API_ROOT}/v1/checks/{self.a1.code}"
         )
 
     def test_it_handles_invalid_uuid(self) -> None:

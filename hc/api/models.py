@@ -421,7 +421,7 @@ class Check(models.Model):
 
             # Optimization: construct API URLs manually instead of using reverse().
             # This is significantly quicker when returning hundreds of checks.
-            update_url = f"{settings.SITE_ROOT}/api/v{v}/checks/{self.code}"
+            update_url = f"{settings.API_ROOT}/v{v}/checks/{self.code}"
             result["update_url"] = update_url
             result["pause_url"] = update_url + "/pause"
             result["resume_url"] = update_url + "/resume"

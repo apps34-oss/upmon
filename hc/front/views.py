@@ -447,7 +447,7 @@ def projects_menu(request: AuthenticatedHttpRequest) -> HttpResponse:
 
 
 def dashboard(request: HttpRequest) -> HttpResponse:
-    return render(request, "front/dashboard.html", {})
+    return render(request, "front/dashboard.html", {"API_ROOT": settings.API_ROOT})
 
 
 def _replace_placeholders(doc: str, html: str) -> str:
@@ -465,6 +465,7 @@ def _replace_placeholders(doc: str, html: str) -> str:
         "{{ default_grace }}": str(int(DEFAULT_GRACE.total_seconds())),
         "SITE_NAME": settings.SITE_NAME,
         "SITE_ROOT": settings.SITE_ROOT,
+        "API_ROOT": settings.API_ROOT,
         "SITE_HOSTNAME": site_hostname(),
         "SITE_SCHEME": urlparse(settings.SITE_ROOT).scheme,
         "PING_ENDPOINT": settings.PING_ENDPOINT,

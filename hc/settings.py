@@ -197,6 +197,7 @@ TIME_ZONE = "UTC"
 USE_I18N = False
 
 SITE_ROOT = os.getenv("SITE_ROOT", "http://localhost:8000").removesuffix("/")
+API_ROOT = os.getenv("API_ROOT", "http://localhost:8000/api")
 SITE_NAME = os.getenv("SITE_NAME", "Mychecks")
 SITE_LOGO_URL = os.getenv("SITE_LOGO_URL")
 MASTER_BADGE_LABEL = os.getenv("MASTER_BADGE_LABEL", SITE_NAME)
