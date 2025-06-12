@@ -10,7 +10,7 @@ including <a href="https://github.com/arduino-libraries/Ethernet">Ethernet</a> a
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;WiFiNINA.h&gt;</span>
 
 <span class="n">WiFiSSLClient</span><span class="w"> </span><span class="n">wifi</span><span class="p">;</span>
-<span class="n">HttpClient</span><span class="w"> </span><span class="n">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HttpClient</span><span class="p">(</span><span class="n">wifi</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hc-ping.com&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">443</span><span class="p">);</span>
+<span class="n">HttpClient</span><span class="w"> </span><span class="n">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HttpClient</span><span class="p">(</span><span class="n">wifi</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;upmon.net&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">443</span><span class="p">);</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>

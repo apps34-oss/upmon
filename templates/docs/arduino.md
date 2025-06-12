@@ -14,7 +14,7 @@ including [Ethernet](https://github.com/arduino-libraries/Ethernet) and
 #include <WiFiNINA.h>
 
 WiFiSSLClient wifi;
-HttpClient client = HttpClient(wifi, "hc-ping.com", 443);
+HttpClient client = HttpClient(wifi, "upmon.net", 443);
 
 void setup() {
   Serial.begin(9600);
