@@ -216,7 +216,7 @@
         <div class="container{% if page == "checks" or page == "details" or page == "log" %}-fluid{% endif %}">
             <ul>
                 <li>
-                    Upmon {% site_version %} by <a href="https://apps34.com">Apps34</a>
+                    Upmon by <a href="https://apps34.com">Apps34</a>
                 </li>
             </ul>
         </div>
@@ -245,5 +245,18 @@
     {% endblock %}
 
     {% block scripts %}{% endblock %}
+
+    <!-- Crisp Chat -->
+    <script type="text/javascript">
+        window.$crisp=[];
+        window.CRISP_WEBSITE_ID="3758f6e3-5e6b-4203-921b-e18f10c3d9c4";
+        (function(){
+            d=document;
+            s=d.createElement("script");
+            s.src="https://client.crisp.chat/l.js";
+            s.async=1;
+            d.getElementsByTagName("head")[0].appendChild(s);
+        })();
+    </script>
 </body>
 </html>
